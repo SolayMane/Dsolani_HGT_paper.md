@@ -1,4 +1,2 @@
 ### We retreived all D solani(14-01-22)
-```bash
-./grub.sh
-````
+[Contribution guidelines for this project](docs/CONTRIBUTING.md)
