@@ -47,6 +47,7 @@ kp <- plotKaryotype(genome=custom.genome, plot.type =2)
 # plot the snp density for each strain (SNP here is for the strain 13-31...)
 kpPlotDensity(kp, data=SNP, window.size=1000, r0=0,r1=0.45, col="#FFAACB")
 kpPlotDensity(kp, data=snp13481A, window.size=1000, r0=0.55,r1=1, col="red")
+````
 
 ## Extact the genes that are affected by snps in the referecen strain :
 ````python
