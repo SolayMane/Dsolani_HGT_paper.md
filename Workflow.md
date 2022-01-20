@@ -4,7 +4,10 @@
 ## We run the phylogenomics pipeline
 [BUSCO_phylogenomics.sh](BUSCO_phylogenomics.sh)
 
-
+## We alsoe used orthofinder to cluster the proteomes and infere the Spceies Tree
+````bash
+orthofinder -t 56 -M msa -A mafft -T iqtree -f data/faa/
+````
 ## Run Snippy on the strains
 
 
@@ -44,5 +47,36 @@ kp <- plotKaryotype(genome=custom.genome, plot.type =2)
 # plot the snp density for each strain (SNP here is for the strain 13-31...)
 kpPlotDensity(kp, data=SNP, window.size=1000, r0=0,r1=0.45, col="#FFAACB")
 kpPlotDensity(kp, data=snp13481A, window.size=1000, r0=0.55,r1=1, col="red")
+
+## Extact the genes that are affected by snps in the referecen strain :
+````python
+from Bio import SeqIO
+
+def get_annotation_with_ID(gbk_file, annoType, qualifier, value):
+
+        #read the gbk file
+        recorde = SeqIO.read(gbk_file,"genbank")
+
+        #loop over the features
+        for feature in recorde.features:
+                if feature.type == annoType and value in feature.qualifiers.get(qualifier, []):
+                        return feature.extract(recorde.seq).translate(table=11,cds=True)
+        return None
+
+
+
+
+
+fasta_of_liste_gene = open("liste.gene.fasta","w")
+
+with open("liste.gene") as file:
+        geneid = file.readlines()
+        geneid = [ids.rstrip() for ids in geneid]
+
+        for id in geneid:
+
+                translation = get_annotation_with_ID("Dsl3337_17.gbk","CDS","locus_tag", id)
+                fasta_of_liste_gene.write(">" + id + "\n" + str(translation) + "\n")
+                print ("Gene number" + id +" was added")
 
 
