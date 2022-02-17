@@ -11,6 +11,41 @@ orthofinder -t 56 -M msa -A mafft -T iqtree -f data/faa/
 ## Run Snippy on the strains
 
 
+
+
+
+## Get stats about vatriants
+
+````bash
+
+echo -e "Strain\tNumVariant\tGenicVariants\tIntergenicVariant\tNumGeneInfected\tSynoV\tMissSens\tComplexType\tsnpType\tmnpType\tdelType\tinsType" > deepStat.tab
+
+
+for file in $(find . -type f -name "snps.tab")
+do
+        strain=$(echo "$file" | cut -d"/" -f 2)
+        NumVariant=$(cat $file | grep -v "CHROM" | wc -l)
+        GenicVariants=$(cat $file | grep -v "CHROM" | cut -f 12 | grep "^D" | wc -l)
+        IntergenicVariant=$(($NumVariant - $GenicVariants))
+        NumGeneInfected=$(cat $file | grep -v "CHROM" | cut -f 12 | grep "^D" | sort | uniq | wc -l)
+        SynoV=$(cat $file | grep -v "CHROM" | cut -f 11 | grep "^syn" | wc -l)
+        MissSens=$(cat $file | grep -v "CHROM" | cut -f 11 | grep "^miss" | wc -l)
+        ComplexType=$(cat $file | grep -v "CHROM" | cut -f 3 | grep "complex" | wc -l)
+        snpType=$(cat $file | grep -v "CHROM" | cut -f 3 | grep "snp" | wc -l)
+        mnpType=$(cat $file | grep -v "CHROM" | cut -f 3 | grep "mnp" | wc -l)
+        delType=$(cat $file | grep -v "CHROM" | cut -f 3 | grep "del" | wc -l)
+        insType=$(cat $file | grep -v "CHROM" | cut -f 3 | grep "ins" | wc -l)
+        #genesCount=$(cat $file | grep -v "CHROM" | cut -f 12 | grep "^D" | sort | uniq)
+        varPerGene=$(cat $file | grep -v "CHROM" | cut -f 12 | grep "^D" | sort | uniq -c)
+        #totalgeneBP=$(cat $file | grep -v "CHROM" | cut -f 12 | grep "^D" | sort | uniq | grep -f - geneSize.tab |  awk '{ sum+= $2} END { if (NR > 0) print sum}')
+        #AvrageVariantPerGene=$(cat $file | grep -v "CHROM" | cut -f 12 | grep "^D" | sort | uniq -c | awk -v var="$totalgeneBP" '{ sum+= $1} END { print (sum/var)/1000 }')
+
+        echo -e "$strain\t$NumVariant\t$GenicVariants\t$IntergenicVariant\t$NumGeneInfected\t$SynoV\t$MissSens\t$ComplexType\t$snpType\t$mnpType\t$delType\t$insType" >>deepStat.tab
+        echo -e "$varPerGene" > ${strain}.varPerGene.txt
+        
+        
+````
+
 ## Plot the snp using
 
 ````R
