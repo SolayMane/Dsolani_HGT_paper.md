@@ -86,33 +86,43 @@ kpPlotDensity(kp, data=snp13481A, window.size=1000, r0=0.55,r1=1, col="red")
 
 ## Extact the genes that are affected by snps in the referecen strain :
 ````python
-from Bio import SeqIO
 
-def get_annotation_with_ID(gbk_file, annoType, qualifier, value):
+# read the gbk file
+recorde = SeqIO.read(gbk_file_2017V,"genbank")
 
-        #read the gbk file
-        recorde = SeqIO.read(gbk_file,"genbank")
+# look for cds features and get infos
+for feature in recorde.features:
+    if feature.type == 'CDS':        
+        product = feature.qualifiers["product"][0]
+        id = feature.qualifiers["locus_tag"][0]
+        prot_seq = feature.extract(recorde.seq).translate(table=11, cds=True)
+        #rawtr = feature.qualifiers.get('translation',[0])
+        #tr = str(rawtr).replace("[","").replace("]","").replace("'","")
+        # make a dict with keys that have multiple values as list
+        if id not in idDict:
+             idDict[id] = list()
+             idDict[id].extend([prot_seq,product])  
+             
+# output file to store fasta
+fasta_of_liste_gene = open("uniqIDgeneAffected.fasta","w")
 
-        #loop over the features
-        for feature in recorde.features:
-                if feature.type == annoType and value in feature.qualifiers.get(qualifier, []):
-                        return feature.extract(recorde.seq).translate(table=11,cds=True)
-        return None
+# open the the file that contains the gene IDs, one ids per line 
+with open("genesAffected.tab") as file:
 
-
-
-
-
-fasta_of_liste_gene = open("liste.gene.fasta","w")
-
-with open("liste.gene") as file:
+        # erad the lines
         geneid = file.readlines()
+        
+        # make a liste of the ids, and remove the the backends
         geneid = [ids.rstrip() for ids in geneid]
+        #print(geneid)
 
-        for id in geneid:
-
-                translation = get_annotation_with_ID("Dsl3337_17.gbk","CDS","locus_tag", id)
-                fasta_of_liste_gene.write(">" + id + "\n" + str(translation) + "\n")
-                print ("Gene number" + id +" was added")
-
+        # loop over the ids and gets information from the dicetionary generated above
+        for ID in geneid:
+            
+            id_seq = idDict[ID][0]
+            id_product = idDict[ID][1]
+            print("Gene : " + str(ID) + " was added.." + id_product)# this for checking whta happen
+            
+            # write the fasta file
+            fasta_of_liste_gene.write(">" + ID + "#" + str(id_product) + "\n" + str(id_seq) + "\n")
 
