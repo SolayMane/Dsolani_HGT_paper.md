@@ -86,6 +86,7 @@ kpPlotDensity(kp, data=snp13481A, window.size=1000, r0=0.55,r1=1, col="red")
 
 ## Extact the genes that are affected by snps in the referecen strain :
 ````python
+from Bio import SeqIO
 
 # read the gbk file
 recorde = SeqIO.read(gbk_file_2017V,"genbank")
