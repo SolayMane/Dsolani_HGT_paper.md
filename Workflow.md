@@ -120,6 +120,14 @@ with open("genesAffected.tab") as file:
 
         # loop over the ids and gets information from the dicetionary generated above
         for ID in geneid:
+````
+
+        
+ ## Blast the genes affected with snp
+ 
+ ````bash
+ cat data/Contig_27_S26.fa data/Contig_28_S27.fa data/Contig_36_S35.fa data/Contig_55_S53.fa data/Contig_8_S8.fa | makeblastdb -dbtype nucl -title DslStrains -out db/dslstrains -parse_seqids
+ ````
             
             id_seq = idDict[ID][0]
             id_product = idDict[ID][1]
