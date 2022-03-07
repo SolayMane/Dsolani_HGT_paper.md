@@ -70,11 +70,52 @@ names(ref) <-c("D. solani RNS 08.23.3.1.A")
 custom.genome <- toGRanges(data.frame(chr=c(names(ref)), start=c(1), end=c(width(ref))))
 
 
+
+
+
 # read the snp tab file output of snippy for evry strain
 rawsnp13481A <- read.table("13-48.1A.snp.tab", sep="\t", header=T)
 
 # converte the raw snp to GRanges object
 snp13481A <- toGRanges(data.frame(chr="D. solani RNS 08.23.3.1.A", start=rawsnp13481A$POS, end=rawsnp13481A$POS+1)
+
+
+
+
+pdf(file="snp_plot_density.pdf")
+
+kp <- plotKaryotype(genome=custom.genome, plot.type =4, labels.plotter=NULL, main="D.solani RNS 08.23.3.1.A")
+kpAddBaseNumbers(kp, tick.dist = 1000000, tick.col="red", cex=1,
+                 minor.tick.dist = 500000, minor.tick.col = "gray", units ="Mb", add.units=TRUE)
+
+
+kpPlotDensity(kp, data=snp13301B, window.size=1000, r0=0,r1=0.19)
+kx <-kpPlotDensity(kp, data=snp13301B, window.size=1000, r0=0,r1=0.19, col="red", border="red")
+kpAxis(kp, ymax=kx$latest.plot$computed.values$max.density, r0=0, r1=0.19, cex=0.4)
+kpAddLabels(kp, labels="13-30-1B", r0=0,r1=0.19, side="right", cex=0.35)
+
+
+kt <-kpPlotDensity(kp, data=snp13311A, window.size=1000, r0=0.2,r1=0.39, col="green", border="green")
+kpAxis(kp, ymax=kt$latest.plot$computed.values$max.density, r0=0.2, r1=0.39, cex=0.4)
+kpAddLabels(kp, labels="13-31-1A", r0=0.2,r1=0.39, side="right", cex=0.35)
+
+kz <-kpPlotDensity(kp, data=snp13481A, window.size=1000, r0=0.40,r1=0.59,col="gray", border="gray")
+kpAxis(kp, ymax=kz$latest.plot$computed.values$max.density, r0=0.40, r1=0.59, cex=0.4)
+kpAddLabels(kp, labels="13-48-1A", r0=0.40,r1=0.59, side="right", cex=0.35)
+
+ka <-kpPlotDensity(kp, data=snp151021A, window.size=1000, r0=0.60,r1=0.79,col="orange", border="orange")
+kpAxis(kp, ymax=ka$latest.plot$computed.values$max.density, r0=0.60, r1=0.79, cex=0.4)
+kpAddLabels(kp, labels="15-102-1A", r0=0.60,r1=0.79, side="right", cex=0.35)
+
+kq <-kpPlotDensity(kp, data=snp101051A, window.size=1000, r0=0.80,r1=1, col="blue", border="blue")
+kpAxis(kp, ymax=kq$latest.plot$computed.values$max.density, r0=0.80, r1=1, cex=0.4)
+kpAddLabels(kp, labels="10-101-1A", r0=0.8,r1=1, side="right", cex=0.35)
+dev.off()
+
+
+
+
+
 
 # plot the chromosome
 kp <- plotKaryotype(genome=custom.genome, plot.type =2)
