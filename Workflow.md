@@ -52,66 +52,119 @@ do
 library(karyoploteR)
 library(GenomicRanges)
 library(seqinr)
-library(Biostrinsg)# use BiocManager to install the package if not installed
+library(Biostrings)
 
 
-# read the genome file
-ref <- readDNAStringSet("Dsl3337_17.fasta")
+ref <- readDNAStringSet("Ds0432.1/reference/ref.fa")
 
-# show the names of the chromosomes :
-names(ref)
-# show the length of every chromosome
-width(ref)
-# so we will use theses data to build a custom genome for our sequence using toGranges
-
-# to rename the sequence
-names(ref) <-c("D. solani RNS 08.23.3.1.A")
+#names(ref)
+#width(ref)
 
 custom.genome <- toGRanges(data.frame(chr=c(names(ref)), start=c(1), end=c(width(ref))))
 
 
+# Load raw snp file
+rawsnpRNS07 <- read.table("RNS07.7.3B/snps.tab", sep="\t", header=T, quote="")
+rawsnp13301B <- read.table("13301B/snps.tab", sep="\t", header=T, quote="")
+rawsnp13311A <- read.table("13311A//snps.tab", sep="\t", header=T, quote="")
+rawsnp13481A <- read.table("13481A/snps.tab", sep="\t", header=T, quote="")
+rawsnp101051A <- read.table("101051A/snps.tab", sep="\t", header=T, quote="")
+rawsnp151021A <- read.table("151021A/snps.tab", sep="\t", header=T, quote="")
+rawsnpDs0432 <- read.table("Ds0432.1/snps.tab", sep="\t", header=T, quote="")
+rawsnpIPO2222 <- read.table("IPO2222/snps.tab", sep="\t", header=T, quote="")
+rawsnpPPO9019 <- read.table("PPO9019/snps.tab", sep="\t", header=T, quote="")
+rawsnpPPO9134 <- read.table("PPO9134/snps.tab", sep="\t", header=T, quote="")
+rawsnpRNS0512A <- read.table("RNS05.1.2A/snps.tab", sep="\t", header=T, quote="")
+rawsnpA62 <- read.table("A623S20A17/snps.tab", sep="\t", header=T, quote="")
 
 
+# convert raw snp file to GRanges file
+snpRNS07 <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnpRNS07$POS, end=rawsnpRNS07$POS))
+snp13311A <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnp13311A$POS, end=rawsnp13311A$POS))
+snp13301B <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnp13301B$POS, end=rawsnp13301B$POS))
+snp13481A <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnp13481A$POS, end=rawsnp13481A$POS))
+snp101051A <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnp101051A$POS, end=rawsnp101051A$POS))
+snp151021A <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnp151021A$POS, end=rawsnp151021A$POS))
+snpDs0432 <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnpDs0432$POS, end=rawsnpDs0432$POS))
+snpIPO2222 <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnpIPO2222$POS, end=rawsnpIPO2222$POS))
+snpIPPO9019 <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnpPPO9019$POS, end=rawsnpPPO9019$POS))
+snpIPPO9134 <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnpPPO9134$POS, end=rawsnpPPO9134$POS))
+snpRNS0512A <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnpRNS0512A$POS, end=rawsnpRNS0512A$POS))
+snpA62 <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnpA62$POS, end=rawsnpA62$POS))
 
-# read the snp tab file output of snippy for evry strain
-rawsnp13481A <- read.table("13-48.1A.snp.tab", sep="\t", header=T)
-
-# converte the raw snp to GRanges object
-snp13481A <- toGRanges(data.frame(chr="D. solani RNS 08.23.3.1.A", start=rawsnp13481A$POS, end=rawsnp13481A$POS+1)
-
-
-
-
+# create a pdf file to store the figure
 pdf(file="snp_plot_density.pdf")
 
-kp <- plotKaryotype(genome=custom.genome, plot.type =4, labels.plotter=NULL, main="D.solani RNS 08.23.3.1.A")
-kpAddBaseNumbers(kp, tick.dist = 1000000, tick.col="red", cex=1,
-                 minor.tick.dist = 500000, minor.tick.col = "gray", units ="Mb", add.units=TRUE)
+# Plot the reference sequence
+kp <- plotKaryotype(genome=custom.genome, plot.type =4, labels.plotter=NULL)
+
+# Add unites on the reference sequence
+kpAddBaseNumbers(kp, tick.dist = 1000000, tick.col="red", cex=0.5,minor.tick.dist = 500000, minor.tick.col = "gray", units ="Mb", add.units=TRUE)
+
+# Plot SNP densities
+ka<-kpPlotDensity(kp,data=snpIPO2222, window.size=1000,r0=0,r1=0.08, col="#32CD32", border="#32CD32")
+kpAxis(kp, ymax=ka$latest.plot$computed.values$max.density, r0=0, r1=0.08, cex=0.25)
+kpAddLabels(kp, labels="IPO2222", r0=0,r1=0.08, side="right", cex=0.35)
+
+kb<-kpPlotDensity(kp,data=snpDs0432, window.size=1000,r0=0.09,r1=0.17, col="#32CD32", border="#32CD32")
+kpAxis(kp, ymax=kb$latest.plot$computed.values$max.density, r0=0.09, r1=0.17, cex=0.25)
+kpAddLabels(kp, labels="Ds0432-1", r0=0.09,r1=0.17, side="right", cex=0.35)
 
 
-kpPlotDensity(kp, data=snp13301B, window.size=1000, r0=0,r1=0.19)
-kx <-kpPlotDensity(kp, data=snp13301B, window.size=1000, r0=0,r1=0.19, col="red", border="red")
-kpAxis(kp, ymax=kx$latest.plot$computed.values$max.density, r0=0, r1=0.19, cex=0.4)
-kpAddLabels(kp, labels="13-30-1B", r0=0,r1=0.19, side="right", cex=0.35)
 
 
-kt <-kpPlotDensity(kp, data=snp13311A, window.size=1000, r0=0.2,r1=0.39, col="green", border="green")
-kpAxis(kp, ymax=kt$latest.plot$computed.values$max.density, r0=0.2, r1=0.39, cex=0.4)
-kpAddLabels(kp, labels="13-31-1A", r0=0.2,r1=0.39, side="right", cex=0.35)
+kc <-kpPlotDensity(kp,data=snp13301B, window.size=1000,r0=0.18,r1=0.23, col="#228B22", border="#228B22")
+kpAxis(kp, ymax=kc$latest.plot$computed.values$max.density, r0=0.18, r1=0.23, cex=0.25)
+kpAddLabels(kp, labels="13-30-1B", r0=0.18,r1=0.23, side="right", cex=0.35)
 
-kz <-kpPlotDensity(kp, data=snp13481A, window.size=1000, r0=0.40,r1=0.59,col="gray", border="gray")
-kpAxis(kp, ymax=kz$latest.plot$computed.values$max.density, r0=0.40, r1=0.59, cex=0.4)
-kpAddLabels(kp, labels="13-48-1A", r0=0.40,r1=0.59, side="right", cex=0.35)
 
-ka <-kpPlotDensity(kp, data=snp151021A, window.size=1000, r0=0.60,r1=0.79,col="orange", border="orange")
-kpAxis(kp, ymax=ka$latest.plot$computed.values$max.density, r0=0.60, r1=0.79, cex=0.4)
-kpAddLabels(kp, labels="15-102-1A", r0=0.60,r1=0.79, side="right", cex=0.35)
+kd <-kpPlotDensity(kp,data=snp13311A, window.size=1000,r0=0.24,r1=0.32, col="#228B22", border="#228B22")
+kpAxis(kp, ymax=kd$latest.plot$computed.values$max.density, r0=0.24,r1=0.32, cex=0.25)
+kpAddLabels(kp, labels="13-31-1A", r0=0.24,r1=0.32, side="right", cex=0.35)
 
-kq <-kpPlotDensity(kp, data=snp101051A, window.size=1000, r0=0.80,r1=1, col="blue", border="blue")
-kpAxis(kp, ymax=kq$latest.plot$computed.values$max.density, r0=0.80, r1=1, cex=0.4)
-kpAddLabels(kp, labels="10-101-1A", r0=0.8,r1=1, side="right", cex=0.35)
+
+
+
+ke <-kpPlotDensity(kp,data=snp13481A, window.size=1000,r0=0.33,r1=0.41, col="#228B22", border="#228B22")
+kpAxis(kp, ymax=ke$latest.plot$computed.values$max.density, r0=0.33,r1=0.41, cex=0.25)
+kpAddLabels(kp, labels="13-48-1A", r0=0.33,r1=0.41, side="right", cex=0.35)
+
+
+kf <-kpPlotDensity(kp,data=snp151021A, window.size=1000,r0=0.42,r1=0.5, col="#228B22", border="#228B22")
+kpAxis(kp, ymax=kf$latest.plot$computed.values$max.density, r0=0.42,r1=0.5, cex=0.25)
+kpAddLabels(kp, labels="15-102-1A", r0=0.42,r1=0.5, side="right", cex=0.35)
+
+
+kg<-kpPlotDensity(kp,data=snpRNS07, window.size=1000,r0=0.51,r1=0.59, col="#228B22", border="#228B22")
+kpAxis(kp, ymax=kg$latest.plot$computed.values$max.density, r0=0.51,r1=0.59, cex=0.25)
+kpAddLabels(kp, labels="07.7.3B", r0=0.51,r1=0.59, side="right", cex=0.35)
+
+
+
+kh <-kpPlotDensity(kp,data=snp101051A, window.size=1000,r0=0.6,r1=0.68, col="#FF4500", border="#FF4500")
+kpAxis(kp, ymax=kh$latest.plot$computed.values$max.density, r0=0.6,r1=0.68, cex=0.25)
+kpAddLabels(kp, labels="101-05-1A", r0=0.6,r1=0.68, side="right", cex=0.35)
+
+
+ki<-kpPlotDensity(kp,data=snpIRNS0512A, window.size=1000,r0=0.69,r1=0.77, col="#FF4500", border="#FF4500")
+kpAxis(kp, ymax=ki$latest.plot$computed.values$max.density, r0=0.69,r1=0.77, cex=0.25)
+kpAddLabels(kp, labels="05.1.2A", r0=0.69,r1=0.77, side="right", cex=0.35)
+
+
+kj<-kpPlotDensity(kp,data=snpA62, window.size=1000,r0=0.78,r1=0.83, col="#FF4500", border="#FF4500")
+kpAxis(kp, ymax=kj$latest.plot$computed.values$max.density, r0=0.78,r1=0.83, cex=0.25)
+kpAddLabels(kp, labels="A623.S20.A17", r0=0.78,r1=0.83, side="right", cex=0.35)
+
+
+kk<-kpPlotDensity(kp,data=snpIPPO9019, window.size=1000,r0=0.84,r1=0.92, col="#0000FF", border="#0000FF")
+kpAxis(kp, ymax=kk$latest.plot$computed.values$max.density, r0=0.84,r1=0.92, cex=0.25)
+kpAddLabels(kp, labels="PPO9019", r0=0.84,r1=0.92, side="right", cex=0.35)
+
+kl<-kpPlotDensity(kp,data=snpIPPO9134, window.size=1000,r0=0.93,r1=1.01, col="#0000FF", border="#0000FF")
+kpAxis(kp, ymax=kl$latest.plot$computed.values$max.density, r0=0.93,r1=1.01, cex=0.3)
+kpAddLabels(kp, labels="PPO9134", r0=0.93,r1=1.01, side="right", cex=0.35)
+
 dev.off()
-
 
 
 
