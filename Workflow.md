@@ -77,7 +77,6 @@ rawsnpPPO9134 <- read.table("PPO9134/snps.tab", sep="\t", header=T, quote="")
 rawsnpRNS0512A <- read.table("RNS05.1.2A/snps.tab", sep="\t", header=T, quote="")
 rawsnpA62 <- read.table("A623S20A17/snps.tab", sep="\t", header=T, quote="")
 
-
 # convert raw snp file to GRanges file
 snpRNS07 <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnpRNS07$POS, end=rawsnpRNS07$POS))
 snp13311A <- toGRanges(data.frame(chr=c(names(ref)), start=rawsnp13311A$POS, end=rawsnp13311A$POS))
@@ -110,51 +109,37 @@ kb<-kpPlotDensity(kp,data=snpDs0432, window.size=1000,r0=0.09,r1=0.17, col="#32C
 kpAxis(kp, ymax=kb$latest.plot$computed.values$max.density, r0=0.09, r1=0.17, cex=0.25)
 kpAddLabels(kp, labels="Ds0432-1", r0=0.09,r1=0.17, side="right", cex=0.35)
 
-
-
-
 kc <-kpPlotDensity(kp,data=snp13301B, window.size=1000,r0=0.18,r1=0.23, col="#228B22", border="#228B22")
 kpAxis(kp, ymax=kc$latest.plot$computed.values$max.density, r0=0.18, r1=0.23, cex=0.25)
 kpAddLabels(kp, labels="13-30-1B", r0=0.18,r1=0.23, side="right", cex=0.35)
-
 
 kd <-kpPlotDensity(kp,data=snp13311A, window.size=1000,r0=0.24,r1=0.32, col="#228B22", border="#228B22")
 kpAxis(kp, ymax=kd$latest.plot$computed.values$max.density, r0=0.24,r1=0.32, cex=0.25)
 kpAddLabels(kp, labels="13-31-1A", r0=0.24,r1=0.32, side="right", cex=0.35)
 
-
-
-
 ke <-kpPlotDensity(kp,data=snp13481A, window.size=1000,r0=0.33,r1=0.41, col="#228B22", border="#228B22")
 kpAxis(kp, ymax=ke$latest.plot$computed.values$max.density, r0=0.33,r1=0.41, cex=0.25)
 kpAddLabels(kp, labels="13-48-1A", r0=0.33,r1=0.41, side="right", cex=0.35)
-
 
 kf <-kpPlotDensity(kp,data=snp151021A, window.size=1000,r0=0.42,r1=0.5, col="#228B22", border="#228B22")
 kpAxis(kp, ymax=kf$latest.plot$computed.values$max.density, r0=0.42,r1=0.5, cex=0.25)
 kpAddLabels(kp, labels="15-102-1A", r0=0.42,r1=0.5, side="right", cex=0.35)
 
-
 kg<-kpPlotDensity(kp,data=snpRNS07, window.size=1000,r0=0.51,r1=0.59, col="#228B22", border="#228B22")
 kpAxis(kp, ymax=kg$latest.plot$computed.values$max.density, r0=0.51,r1=0.59, cex=0.25)
 kpAddLabels(kp, labels="07.7.3B", r0=0.51,r1=0.59, side="right", cex=0.35)
-
-
 
 kh <-kpPlotDensity(kp,data=snp101051A, window.size=1000,r0=0.6,r1=0.68, col="#FF4500", border="#FF4500")
 kpAxis(kp, ymax=kh$latest.plot$computed.values$max.density, r0=0.6,r1=0.68, cex=0.25)
 kpAddLabels(kp, labels="101-05-1A", r0=0.6,r1=0.68, side="right", cex=0.35)
 
-
 ki<-kpPlotDensity(kp,data=snpIRNS0512A, window.size=1000,r0=0.69,r1=0.77, col="#FF4500", border="#FF4500")
 kpAxis(kp, ymax=ki$latest.plot$computed.values$max.density, r0=0.69,r1=0.77, cex=0.25)
 kpAddLabels(kp, labels="05.1.2A", r0=0.69,r1=0.77, side="right", cex=0.35)
 
-
 kj<-kpPlotDensity(kp,data=snpA62, window.size=1000,r0=0.78,r1=0.83, col="#FF4500", border="#FF4500")
 kpAxis(kp, ymax=kj$latest.plot$computed.values$max.density, r0=0.78,r1=0.83, cex=0.25)
 kpAddLabels(kp, labels="A623.S20.A17", r0=0.78,r1=0.83, side="right", cex=0.35)
-
 
 kk<-kpPlotDensity(kp,data=snpIPPO9019, window.size=1000,r0=0.84,r1=0.92, col="#0000FF", border="#0000FF")
 kpAxis(kp, ymax=kk$latest.plot$computed.values$max.density, r0=0.84,r1=0.92, cex=0.25)
@@ -165,17 +150,6 @@ kpAxis(kp, ymax=kl$latest.plot$computed.values$max.density, r0=0.93,r1=1.01, cex
 kpAddLabels(kp, labels="PPO9134", r0=0.93,r1=1.01, side="right", cex=0.35)
 
 dev.off()
-
-
-
-
-
-# plot the chromosome
-kp <- plotKaryotype(genome=custom.genome, plot.type =2)
-
-# plot the snp density for each strain (SNP here is for the strain 13-31...)
-kpPlotDensity(kp, data=SNP, window.size=1000, r0=0,r1=0.45, col="#FFAACB")
-kpPlotDensity(kp, data=snp13481A, window.size=1000, r0=0.55,r1=1, col="red")
 ````
 
 ## Extact the genes that are affected by snps in the referecen strain :
