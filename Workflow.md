@@ -246,7 +246,7 @@ with open("genesAffected.tab") as file:
  nodelabels(tree$node.label,node=2:tree$Nnode+Ntip(tree), adj=c(1,-0.2),frame="none")
  
  dev.off()
- 
+ ````
  ## Blast the genes affected with snp
  
  ````bash
