@@ -200,7 +200,53 @@ with open("genesAffected.tab") as file:
             fasta_of_liste_gene.write(">" + ID + "#" + str(id_product) + "\n" + str(id_seq) + "\n")
 ````
 
-
+ ## Raun ANI calculations and plot pylogeny with ANI matrix
+ 
+ ```` bash
+ # reformat boostraps values
+ sed 's:\([0-9]\{2\}\:\):B=\1:g' Dsolani.tree
+ 
+ 
+ # Prepare the genomes 
+ ls data/*.fna | while read file; do echo "$file" >> liste.genomes;done
+ 
+ # Run fastANi
+ fastANI --ql liste.genome --rl liste.genomes -o aniout -t 56
+ 
+ ````
+ ````R
+ library(phytools)
+ library(reshape2)
+ 
+ data <- read.table("aniout.txt", sep ="\t")
+ tree <- read.tree("Dsolani.tree")
+ 
+ 
+ # make 2 D matrix
+ mat <- acast(data, V1~V2, value.var="V3")
+ 
+ 
+ # rename row and col names
+ gsub(".fna","",rownames(mat)) -> rnames
+ gsub(".fna","",colnames(mat)) -> clnames
+ rownames(mat) <- rnames
+ colnames(mat) <- clnames
+ 
+ # rename tip labels
+ gsub(".fna","",tree$tip) -> tipsL
+ tree$tip.label <- tipsL
+ 
+ # create pdf file
+ pdf(file="final_tree.pdf")
+ 
+ # Plot the tree with matrix
+ phylo.heatmap(tree, mat, fsize=0.5, pts=FALSE, lwd=1, colors=colors<-colorRampPalette(colors=c("green","red"))(100))
+ 
+ # node BP value support
+ nodelabels(tree$node.label,node=2:tree$Nnode+Ntip(tree), adj=c(1,-0.2),frame="none")
+ 
+ dev.off()
+ 
  ## Blast the genes affected with snp
  
  ````bash
