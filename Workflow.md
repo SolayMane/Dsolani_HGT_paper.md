@@ -261,3 +261,10 @@ with open("genesAffected.tab") as file:
  # run tblastx
  
  ````
+ ## Plot phylogenomics tree using ggtree with meta data 
+ ````R
+pdf(file="tree.pdf", width=10)
+p <- ggtree(tree) %<+% meta + geom_tiplab(size =4, align=TRUE, linesize=0.1, offset=0.005) +geom_tippoint(aes(color = coutry), size =1.5) +  scale_color_brewer(name="Country", palette ="Spectral",na.value="grey")+ geom_tiplab(aes(label= date), color ="blue", offset = 0.012, size =3,align=TRUE,linetype="blank") + geom_tiplab(aes(label= host), color ="red", offset = 0.014, size =3,align=TRUE,linetype="blank")+ geom_text2(aes(subset=(as.numeric(label)> 80), label=label),size =3, hjust =1, vjust =-1)
+gheatmap(p, mat, offset=0.016, width = 0.2, legend_title="ANI value", font.size=2, colnames=FALSE)
+dev.off()
+````
