@@ -263,8 +263,34 @@ with open("genesAffected.tab") as file:
  ````
  ## Plot phylogenomics tree using ggtree with meta data 
  ````R
+library(reshape2)
+library(phytools)
+library(ggplot2)
+library(ggtree)
+
+# read the ani table
+raw <- read.table("aniout", sep ="\t")
+
+#Create 2d matrix
+m <- acast(raw,V1~V2, value.var="V3")
+ 
+ # create 2D mat for only two strain 0512 and RNS08....
+ mat <- m[,c("RNS_08.23.3.1.A.fna","RNS05.1.2A.fna")]
+ 
+ # read the metadata
+ meta <- read.table("meta.txt", sep ="\t", header=TRUE)
+ 
+ # read tree
+ tree <- ape::read.tree("Dsolani.tree")
+# create the pdf file
 pdf(file="tree.pdf", width=10)
+
+# create the tree with the annotations
 p <- ggtree(tree) %<+% meta + geom_tiplab(size =4, align=TRUE, linesize=0.1, offset=0.005) +geom_tippoint(aes(color = coutry), size =1.5) +  scale_color_brewer(name="Country", palette ="Spectral",na.value="grey")+ geom_tiplab(aes(label= date), color ="blue", offset = 0.012, size =3,align=TRUE,linetype="blank") + geom_tiplab(aes(label= host), color ="red", offset = 0.014, size =3,align=TRUE,linetype="blank")+ geom_text2(aes(subset=(as.numeric(label)> 80), label=label),size =3, hjust =1, vjust =-1)
+
+# add the heatmaps of ani values to the tree
 gheatmap(p, mat, offset=0.016, width = 0.2, legend_title="ANI value", font.size=2, colnames=FALSE)
+
+# save the file
 dev.off()
 ````
