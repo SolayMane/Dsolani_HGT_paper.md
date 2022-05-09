@@ -22,6 +22,8 @@ optional arguments:
   -o OUT, --out OUT     Output file in fasta format (default: None)
 
 # run the script
-[./getGenes_aa.py](../../getGenes_aa.py) -g Dsl3337_17.gbk -o genes_in_hgt.fasta -l liste.genes 
 ````
+
+[./getGenes_aa.py](./getGenes_aa.py) ```` -g Dsl3337_17.gbk -o genes_in_hgt.fasta -l liste.genes```` 
+
 
