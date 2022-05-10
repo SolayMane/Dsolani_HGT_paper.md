@@ -27,3 +27,10 @@ optional arguments:
 [./getGenes_aa.py](./getGenes_aa.py) ```` -g Dsl3337_17.gbk -o genes_in_hgt.fasta -l liste.genes```` 
 
 
+```mermaid
+graph TD
+    A(collection raw read stats with seqtk) --> B(Estimating genome size kmc)
+    B --> C(Trimming reads)
+    C --> D(Correcting reads with lighter)
+    D --> E(Assembling reads with SPAdes)
+```
