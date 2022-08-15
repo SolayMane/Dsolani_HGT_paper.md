@@ -296,6 +296,8 @@ dev.off()
 ````
 ## Visalization of the phylogenomics tre with snp data 
 ````R
+
+# check that labeld name are the sam in the treee and metadata
 tree <- ape::read.tree("Dsolani.tree")
 meta <- read.table("meta.txt", sep ="\t", header=TRUE)
  
@@ -304,5 +306,17 @@ p <-ggtree(tree, branch.length="none") %<+% meta + geom_tiplab(size =3,align=TRU
 p  + geom_facet(panel = "SNP", data = snp_data, geom = geom_point,  mapping=aes(x = pos, color ="red"), shape = '|') +theme_tree2(legend.position=c(.05, .80))
 ````
 ![image](https://user-images.githubusercontent.com/22656460/184667339-6324c03d-8071-41bb-b44b-5380ed859929.png)
+
+## We can also visualize snp plus ANI data 
+````R
+p <-ggtree(tree, branch.length="none") %<+% meta + geom_tiplab(size =3,align=TRUE) + hexpand(.6) + geom_tiplab(aes(label= date), color ="blue", offset = 2, size =3,align=TRUE,linetype="blank") + geom_tiplab(aes(label= host), color ="green", offset = 3, size =3,align=TRUE,linetype="blank")+geom_tiplab(aes(label= coutry), color ="red", offset = 4, size =3,align=TRUE,linetype="blank") + geom_text2(aes(subset=!isTip,label=label),size=3, hjust =1, vjust =-1)
+
+n<-p  + geom_facet(panel = "SNP", data = snp_data, geom = geom_point,  mapping=aes(x = pos, color ="red"), shape = '|') +theme_tree2(legend.position=c(.05, .80))
+
+gheatmap(n, mat, offset=5, width = 0.2, legend_title="ANI value", font.size=2, colnames=FALSE)
+````
+![image](https://user-images.githubusercontent.com/22656460/184669607-4b747cb9-86d6-4d4a-8b33-a63be9f646d8.png)
+
+
 
 
