@@ -304,8 +304,19 @@ gheatmap(p, mat, offset=0.0017, width = 0.03, legend_title="ANI value", font.siz
 
 dev.off()
 
+png("tree_meta.png", width=500, height=400, units="mm", res=300,pointsize = 16)
+
+p <- ggtree(tree, ladderize=6)%<+% meta + geom_tiplab(size =7,align=TRUE, linesize=0.1,aes(color=Host),show.legend =FALSE) +hexpand(1)+ geom_text2(aes(subset=!isTip,label=label),color="red",size=5, hjust =1.2, vjust =-1) + geom_tiplab(aes(label= date), color ="blue", offset=0.002,size =7,align=TRUE,linetype="blank")+geom_tiplab(aes(label= coutry), color ="red", offset =0.003, size =7,align=TRUE,linetype="blank")+ geom_tippoint(aes(color = Host), size =1)
+
+gheatmap(p, mat, offset=0.0045, width = 0.04, legend_title="ANI value", font.size=0.5, colnames=FALSE) + theme(legend.position ="bottom", legend.key.width=unit(2,'cm'), legend.title=element_text(size=20), legend.text=element_text(size=15)) + guides(color = guide_legend(override.aes=list(size=5)))
+
+dev.off()
+
 ````
-![tree_last_001_modified](https://user-images.githubusercontent.com/22656460/184885420-65be6d75-12dd-4c64-a278-0ba812f2eb3f.png)
+### tree_last.pdf
+![tree_last.pdf](https://user-images.githubusercontent.com/22656460/184885420-65be6d75-12dd-4c64-a278-0ba812f2eb3f.png)
+### tree_meta.png
+![tree_meta.png](https://user-images.githubusercontent.com/22656460/185091921-ec43350e-11ad-4e97-8ba9-c6d19c834a51.png)
 
 ## Visalization of the phylogenomics tre with snp data 
 ````R
